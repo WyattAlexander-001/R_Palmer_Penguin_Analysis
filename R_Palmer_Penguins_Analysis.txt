@@ -1,0 +1,151 @@
+#Data analysis on Palmer Penguins
+
+install.packages('palmerpenguins')
+install.packages('rmarkdown')
+install.packages('tidyverse')
+
+install.packages('here')
+library('here')
+
+
+#Overview of data
+install.packages('skimr')
+library('skimr')
+head(penguins)
+glimpse(penguins)
+skim_without_charts(penguins)
+
+#Specific Columns
+penguins %>% 
+  select(species)
+
+#Filter OUT Specific Columns
+penguins %>% 
+  select(-species)
+
+#Rename columns to be neater or more specific
+penguins %>%
+  rename(ISLAND = island) %>%
+  rename(GENDER = sex)
+
+#Renaming all columns to lowercase for ease of use
+rename_with(penguins, tolower)
+
+#Ensures that there's only characters, numbers and underscores in column names
+clean_names(penguins)
+
+#Sort penguins by bill length in ascending order
+penguins %>% 
+  arrange(bill_length_mm)
+
+#Sort penguins by bill length in descending order
+penguins %>% 
+  arrange(-bill_length_mm)
+
+#We access our data and then (%>%) group by island, drop NULL(s), and get summary by mean
+penguins %>%
+  group_by(island) %>%
+  drop_na() %>%
+  summarize(mean_bill_length_mm = mean(bill_length_mm))
+
+#Same approach but for min value
+
+penguins %>%
+  group_by(island) %>%
+  drop_na() %>%
+  summarize(min_bill_length_mm = min(bill_length_mm))
+
+#Same approach but for max value
+
+penguins %>%
+  group_by(island) %>%
+  drop_na() %>%
+  summarize(max_bill_length_mm = max(bill_length_mm))
+
+#Can have multiple columns in group by to save time not writing code
+
+penguins %>%
+  group_by(island, species) %>%
+  drop_na() %>%
+  summarize(max_bill_length_mm = max(bill_length_mm), min_bill_length_mm = min(bill_length_mm))
+
+#Filter data on daily penguins
+penguins %>% filter(species == 'Adelie')
+
+#In the event we wanted to separate or unite columns the format would be:
+#separate(data_frame, column_to_separate, into=c('new_col_1', 'new_col_2'), sep= ' ' )
+#unite(data_frame, 'new_united_col_name', col_1, col_2, sep = ' ' )
+
+#Converting data and making it a new column, we have our weights in g, but would like in lb
+penguins %>%
+  mutate(body_mass_lb = body_mass_g/453.59237)
+
+#####Visualizations##### 
+#Plotting Data
+library('ggplot2')
+library('palmerpenguins')
+
+#Template for other project(s):
+
+#ggplot function = data you use
+#geom_point = means we are using points but there's , bars, lines and more
+#aes is the aesthetic to define the look of your data
+ggplot(data=<DATA>) + 
+  <GEOM_FUNCTION>(mapping=aes(<AESTHETIC MAPPINGS>))
+
+#Plotting Values Flipper on X axis, Mass on Y axis. Positive correlation
+#We separate out by color/shape
+#There's also size and alpha as options, visuals are project dependent, keep it simple
+#Adding a title/subtitle/caption
+#Added Annotation
+#Save and Export! 
+ggplot(data=penguins) + 
+  geom_point(mapping=aes(x=flipper_length_mm,y=body_mass_g, color = species, shape = species)) +
+  labs(title= "Palmer Penguins : Body Mass vs Flipper Length", subtitle = "Sample of Three Penguin Species",
+       caption = 'Data collected by Dr. Kristen Gorman') +
+  annotate('text', x=220, y=3500, label = "The Gentoos are the largest!", color = 'blue', fontface = 'bold', size= 4.5, angle= 25)
+ggsave('Three_Penguin_Species.png')
+
+
+## Minor Things
+#Specific color
+ggplot(data=penguins) + 
+  geom_point(mapping=aes(x=flipper_length_mm,y=body_mass_g), color = 'purple')
+  
+#Different Geom (smooth)
+ggplot(data=penguins) + 
+  geom_smooth(mapping=aes(x=flipper_length_mm,y=body_mass_g), color = 'purple')
+
+#Best fit line
+ggplot(data=penguins) + 
+  geom_smooth(mapping=aes(x=flipper_length_mm,y=body_mass_g), color = 'blue')+
+  geom_point(mapping=aes(x=flipper_length_mm,y=body_mass_g), color = 'orange')
+
+#Jitter can be used instead of points
+ggplot(data=penguins) + 
+  geom_jitter(mapping=aes(x=flipper_length_mm,y=body_mass_g), color = 'purple')
+
+#No correlation between bill length and depth
+ggplot(data=penguins) + 
+  geom_point(mapping=aes(x=bill_length_mm,y=bill_depth_mm))
+
+#Adding facets to make separate charts
+ggplot(data=penguins) + 
+  geom_point(mapping=aes(x=flipper_length_mm,y=body_mass_g, color = species, shape = species))+
+  facet_wrap(~species)
+
+#faceting by two variables
+ggplot(data=penguins) + 
+  geom_point(mapping=aes(x=flipper_length_mm,y=body_mass_g, color = species, shape = species))+
+  facet_grid(sex~species)
+
+#Bar char (histogram):
+ggplot(data=penguins) +
+  geom_bar(mapping=aes(x=body_mass_g, fill = island))
+
+ggplot(data=penguins) +
+  geom_bar(mapping=aes(x=island, fill = island))
+
+
+#Questions on a function? Using ? <function_name> gives all the info
+?geom_point
