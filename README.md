@@ -16,5 +16,5 @@ Secondly, after seeing a clear correlation between flipper length and bodymass, 
 ![ ](/images/Palmer_Penguin_visuals/sorted_by_species.PNG)
 
 Lastly, to wrap up, a final graphic was made to show how they compare to one another. The conclusion was that there is a strong correlation between flipper length and bodymass, with Gentoos being the largest. 
-![ ](R_Palmer_Penguin_Analysis/images/Final_Image_Palmer_Penguins.PNG)
+![ ](https://github.com/WyattAlexander-001/R_Palmer_Penguin_Analysis/blob/main/images/Final_Image_Palmer_Penguins.PNG)
 
